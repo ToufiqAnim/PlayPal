@@ -11,8 +11,8 @@ import { TAdmin } from '../Admin/admin.interface';
 import { Admin } from '../Admin/admin.model';
 import { TFaculty } from '../Faculty/faculty.interface';
 import { Faculty } from '../Faculty/faculty.model';
-import { TStudent } from '../Facility/student.interface';
-import { Student } from '../Facility/student.model';
+import { TStudent } from '../Facility/facility.interface';
+import { Student } from '../Facility/facility.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 import {

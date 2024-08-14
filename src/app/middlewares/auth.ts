@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
-const JWT_ACCESS_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_ACCESS_SECRET as string;
 
-// Middleware to authenticate the user
-export const authenticate = (
+export const authMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -22,9 +21,14 @@ export const authenticate = (
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_ACCESS_SECRET) as { userId: string };
-    (req as any).userId = decoded.userId; // Attach the userId to the request object
-    next();
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    if (typeof decoded === 'object' && 'userId' in decoded) {
+      (req as any).userId = (decoded as JwtPayload).userId; // Attach the userId to the request object
+      next();
+    } else {
+      throw new Error('Invalid token payload');
+    }
   } catch (error) {
     res.status(401).json({
       success: false,
