@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface IFacility extends Document {
+export interface IFacility extends Document {
   name: string;
   description: string;
   pricePerHour: string;
@@ -17,4 +17,5 @@ const FacilitySchema: Schema<IFacility> = new Schema({
 });
 
 const Facility = mongoose.model<IFacility>('Facility', FacilitySchema);
+
 export default Facility;

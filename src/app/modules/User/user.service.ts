@@ -5,7 +5,7 @@ import { IUser, User } from './user.model';
 import { userValidationSchema } from './user.validation';
 
 // JWT Secret Key
-const JWT_SECRET = process.env.JWT_SECRET || 'remember you secret';
+const JWT_SECRET = process.env.JWT_ACCESS_SECRET || 'remember you secret';
 
 // Service for signing up a user
 export const signUpService = async (userData: IUser) => {

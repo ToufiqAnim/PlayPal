@@ -10,6 +10,7 @@ import notFound from './app/middlewares/notFound';
 // import router from './app/routes';
 import { errorHandler } from './app/middlewares/errorHandeler';
 import { AuthRoutes } from './app/modules/User/authRoutes';
+import { FacilityRoutes } from './app/modules/Facility/facility.route';
 
 const app: Application = express();
 
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use(cors({ origin: ['http://localhost:5173'], credentials: true }));
 
 app.use('/api/auth', AuthRoutes);
+app.use('/api/facility', FacilityRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hi Next Level Developer !');
