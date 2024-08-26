@@ -28,7 +28,7 @@ const CreateBooking = async (bookingData: IBooking, payload: JwtPayload) => {
     ],
   });
 
-  if (!existingBooking)
+  if (existingBooking)
     throw new Error('Facility is unavailable during the requested time slot');
 
   //Payable Amount Calculation

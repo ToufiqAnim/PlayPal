@@ -12,6 +12,9 @@ router.post(
   validateRequest(BookingValidation.bookingValidationSchema),
   BookingControllers.CreateBooking,
 );
-router.get('/check-availability', BookingControllers.CheckAailability);
+router.get('/bookings', auth('admin'), BookingControllers.GetAllBookings);
+router.get('/bookings/user', auth('user'), BookingControllers.GetUserBookings);
+router.delete('/bookings/:id', auth('user'), BookingControllers.CancelBooking);
+router.get('/check-availability', BookingControllers.CheckAvailability);
 
 export const BookingRoutes = router;
