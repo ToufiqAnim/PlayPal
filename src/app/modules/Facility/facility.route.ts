@@ -1,26 +1,26 @@
 import express from 'express';
-import { authMiddleware } from '../../middlewares/auth';
-import { authorize } from '../../middlewares/authorize';
+
 import { FacilityControllers } from './facility.controller';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
 router.post(
   '/',
-  authMiddleware,
-  authorize('admin'),
+
+  auth('admin'),
   FacilityControllers.AddFacility,
 );
 router.put(
   '/:id',
-  authMiddleware,
-  authorize('admin'),
+
+  auth('admin'),
   FacilityControllers.UpdateFacility,
 );
 router.delete(
   '/:id',
-  authMiddleware,
-  authorize('admin'),
+
+  auth('admin'),
   FacilityControllers.DeleteFacility,
 );
 router.get('/', FacilityControllers.GetAllFacilities);

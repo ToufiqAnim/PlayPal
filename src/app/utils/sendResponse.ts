@@ -11,6 +11,7 @@ type TResponse<T> = {
   statusCode: number;
   success: boolean;
   message?: string;
+  token?: string;
   meta?: TMeta;
   data: T;
 };
@@ -20,6 +21,7 @@ const sendResponse = <T>(res: Response, data: TResponse<T>) => {
     success: data.success,
     message: data.message,
     meta: data.meta,
+    token: data?.token,
     data: data.data,
   });
 };

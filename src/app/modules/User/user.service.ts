@@ -1,54 +1,47 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-
-import { IUser, User } from './user.model';
-import { userValidationSchema } from './user.validation';
-
-// JWT Secret Key
-const JWT_SECRET = process.env.JWT_ACCESS_SECRET || 'remember you secret';
+import { User } from './user.model';
+import { ILoginUser, IUser } from './user.interface';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
+import { createToken } from '../../utils/createTOken';
+import config from '../../config';
 
 // Service for signing up a user
 export const signUpService = async (userData: IUser) => {
-  // Validate data using Zod
-  const validatedData = userValidationSchema.parse(userData);
-
-  // Check if email already exists
-  const existingUser = await User.findOne({ email: validatedData.email });
+  const existingUser = await User.isUserExists(userData.email);
   if (existingUser) {
-    throw new Error('Email already exists');
+    throw new AppError(httpStatus.BAD_REQUEST, 'User already exists!!!');
   }
+  const result = await User.create(userData);
 
-  // Hash password
-  const hashedPassword = await bcrypt.hash(validatedData.password, 10);
-  const newUser = new User({ ...validatedData, password: hashedPassword });
-
-  // Save user
-  await newUser.save();
-  newUser.password = ''; // Remove password before returning user data
-
-  return newUser;
+  return result;
 };
 
 // Service for logging in a user
-export const loginService = async (email: string, password: string) => {
-  // Find user by email
-  const user = await User.findOne({ email });
+export const loginService = async (payload: ILoginUser) => {
+  const user = await User.isUserExists(payload.email);
+
   if (!user) {
-    throw new Error('Invalid email or password');
+    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
   }
+  if (!(await User.isPasswordMatched(payload?.password, user?.password)))
+    throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched');
 
-  // Check password
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    throw new Error('Invalid email or password');
-  }
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+    _id: user._id,
+  };
 
-  // Generate JWT token
-  const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
-    expiresIn: '1d',
-  });
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  );
 
-  return { token, user };
+  return {
+    accessToken,
+    user,
+  };
 };
 
 // Service for getting user profile

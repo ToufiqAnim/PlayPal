@@ -1,38 +1,71 @@
-import { Schema, Document, model } from 'mongoose';
-import { z } from 'zod';
-import { userValidationSchema } from './user.validation';
+import { model, Schema } from 'mongoose';
+import { IUser, UserModel } from './user.interface';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
-export interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
-  phone: string;
-  address: string;
-  role: 'admin' | 'user';
-}
-
-export type UserType = z.infer<typeof userValidationSchema> & IUser;
-
-const userSchema = new Schema<UserType>(
+const userSchema = new Schema<IUser>(
   {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    phone: { type: String, required: true },
-    address: { type: String, required: true },
-    role: { type: String, enum: ['admin', 'user'], default: 'user' },
+    name: {
+      type: String,
+      required: [true, 'Name is required.'],
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: [true, 'Email is required.'],
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is required.'],
+      minlength: [6, 'Password must be at least 6 characters long.'],
+      select: 0,
+    },
+    phone: {
+      type: String,
+      required: [true, 'Phone number is required.'],
+    },
+    role: {
+      type: String,
+      enum: {
+        values: ['admin', 'user'],
+        message: 'Role must be either "admin" or "user".',
+      },
+    },
+    address: {
+      type: String,
+      required: [true, 'Address is required.'],
+    },
   },
   {
-    timestamps: true,
+    versionKey: false,
+    timestamps: false,
   },
 );
 
 userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
-    // Hash password logic goes here (e.g., using bcrypt)
-  }
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcrypt_salt_rounds),
+  );
   next();
 });
+userSchema.set('toJSON', {
+  transform: function (doc, ret) {
+    delete ret.password;
+    return ret;
+  },
+});
 
-// Create the User model using the schema
-export const User = model<UserType>('User', userSchema);
+userSchema.statics.isUserExists = async function (email: string) {
+  return await User.findOne({ email }).select('+password');
+};
+
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  hashedPassword,
+) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+export const User = model<IUser, UserModel>('User', userSchema);

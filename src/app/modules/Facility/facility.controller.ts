@@ -1,111 +1,64 @@
 import { Request, Response } from 'express';
-import { IFacility } from './facility.model';
+
 import { FacilityServices } from './facility.service';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
+import httpStatus from 'http-status';
 
-const AddFacility = async (req: Request, res: Response) => {
-  try {
-    const facilityData: IFacility = req.body;
-    const savedFacility = await FacilityServices.CreateFacility(facilityData);
+const CreateFacility = catchAsync(async (req: Request, res: Response) => {
+  const facilityData = req.body;
+  const newFacility = await FacilityServices.CreateFacility(facilityData);
 
-    res.status(200).json({
-      success: true,
-      statusCode: 200,
-      message: 'Facility added successfully',
-      data: savedFacility,
-    });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({
-        success: false,
-        statusCode: 500,
-        message: 'Server Error',
-        details: error.message,
-      });
-    } else {
-      res.status(500).json({
-        success: false,
-        statusCode: 500,
-        message: 'Server Error',
-        details: 'An unknown error occurred',
-      });
-    }
-  }
-};
-const GetAllFacilities = async (req: Request, res: Response) => {
-  try {
-    const facilities = await FacilityServices.GetAllFacilities();
-    res.status(200).json({
-      success: true,
-      statusCode: 200,
-      message: 'Facilities retrieved successfully',
-      data: facilities,
-    });
-  } catch (error) {
-    res.status(500).json({
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Facility added successfully',
+    data: newFacility,
+  });
+});
+const GetAllFacilities = catchAsync(async (req: Request, res: Response) => {
+  const facilities = await FacilityServices.GetAllFacilities();
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Facilities retrieved successfully',
+    data: facilities,
+  });
+});
+const UpdateFacility = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const facilityData = req.body;
+  const updatedFacility = await FacilityServices.UpdateFacility(
+    id,
+    facilityData,
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Facilities updated successfully',
+    data: updatedFacility,
+  });
+});
+const DeleteFacility = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const deletedFacility = await FacilityServices.DeleteFacility(id);
+  if (!deletedFacility) {
+    return res.status(404).json({
       success: false,
-      statusCode: 500,
-      message: 'Internal server error',
-      error,
+      statusCode: 404,
+      message: 'Facility not found',
     });
   }
-};
-const UpdateFacility = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const updatedFacility = await FacilityServices.UpdateFacility(id, req.body);
-    if (!updatedFacility) {
-      return res.status(404).json({
-        success: false,
-        statusCode: 404,
-        message: 'Facility not found',
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      statusCode: 200,
-      message: 'Facility updated successfully',
-      data: updatedFacility,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      statusCode: 500,
-      message: 'Internal server error',
-      error,
-    });
-  }
-};
-const DeleteFacility = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const deletedFacility = await FacilityServices.DeleteFacility(id);
-    if (!deletedFacility) {
-      return res.status(404).json({
-        success: false,
-        statusCode: 404,
-        message: 'Facility not found',
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      statusCode: 200,
-      message: 'Facility updated successfully',
-      data: deletedFacility,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      statusCode: 500,
-      message: 'Internal server error',
-      error,
-    });
-  }
-};
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Facilities deleted successfully',
+    data: deletedFacility,
+  });
+});
 
 export const FacilityControllers = {
-  AddFacility,
+  CreateFacility,
   GetAllFacilities,
   UpdateFacility,
   DeleteFacility,

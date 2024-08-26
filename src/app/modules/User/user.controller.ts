@@ -6,6 +6,9 @@ import {
   updateProfileService,
 } from './user.service';
 import { z } from 'zod';
+import catchAsync from '../../utils/catchAsync';
+import httpStatus from 'http-status';
+import sendResponse from '../../utils/sendResponse';
 
 // Sign Up Controller
 export const signUp = async (req: Request, res: Response) => {
@@ -31,33 +34,18 @@ export const signUp = async (req: Request, res: Response) => {
 };
 
 // Login Controller
-export const login = async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
-    const { token, user } = await loginService(email, password);
+export const login = catchAsync(async (req, res) => {
+  const result = await loginService(req.body);
+  const { accessToken, user } = result;
 
-    res.status(200).json({
-      success: true,
-      statusCode: 200,
-      message: 'User logged in successfully',
-      token,
-      data: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        address: user.address,
-        role: user.role,
-      },
-    });
-  } catch (error) {
-    res.status(401).json({
-      success: false,
-      statusCode: 401,
-      message: error.message,
-    });
-  }
-};
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User logged in successfully',
+    token: accessToken,
+    data: user,
+  });
+});
 
 // Get Profile Controller
 export const getProfile = async (req: Request, res: Response) => {
