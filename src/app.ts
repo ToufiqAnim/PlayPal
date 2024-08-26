@@ -12,6 +12,7 @@ import { errorHandler } from './app/middlewares/globalErrorHandler';
 import { AuthRoutes } from './app/modules/User/authRoutes';
 import { FacilityRoutes } from './app/modules/Facility/facility.route';
 import { BookingRoutes } from './app/modules/Booking/booking.route';
+import { UserRoutes } from './app/modules/User/user.route';
 
 const app: Application = express();
 
@@ -24,6 +25,7 @@ app.use(cors({ origin: ['http://localhost:5173'], credentials: true }));
 app.use('/api/auth', AuthRoutes);
 app.use('/api/facility', FacilityRoutes);
 app.use('/api', BookingRoutes);
+app.use('/api/user', UserRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hi Next Level Developer !');

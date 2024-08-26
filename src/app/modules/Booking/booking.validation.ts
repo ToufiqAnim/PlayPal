@@ -1,25 +1,44 @@
 import { Types } from 'mongoose';
 import { z } from 'zod';
 
-const objectIdTransform = z
+const objectIdValidationSchema = z
   .string()
-  .refine((value) => Types.ObjectId.isValid(value), {
-    message: 'Invalid ObjectId format',
+  .refine((val) => Types.ObjectId.isValid(val), {
+    message: 'Invalid ObjectId',
+  });
+
+export const bookingValidationSchema = z
+  .object({
+    facility: objectIdValidationSchema,
+    date: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format.'),
+    startTime: z
+      .string()
+      .regex(/^\d{2}:\d{2}$/, 'Start time must be in HH:MM format.'),
+    endTime: z
+      .string()
+      .regex(/^\d{2}:\d{2}$/, 'End time must be in HH:MM format.'),
+    payableAmount: z.number().optional(),
+    isBooked: z.enum(['confirmed', 'canceled']).default('confirmed'),
   })
-  .transform((value) => new Types.ObjectId(value));
+  .refine(
+    (data) => {
+      const [startHour, startMinute] = data.startTime.split(':').map(Number);
+      const [endHour, endMinute] = data.endTime.split(':').map(Number);
 
-const dateTransform = z.string().transform((value) => new Date(value));
+      // Convert time hour to m
+      const startTimeInMinutes = startHour * 60 + startMinute;
+      const endTimeInMinutes = endHour * 60 + endMinute;
 
-export const bookingZodSchema = z.object({
-  userId: objectIdTransform,
-  facilityId: objectIdTransform,
-  date: dateTransform,
-  startTime: dateTransform,
-  endTime: dateTransform,
-  payableAmount: z
-    .number()
-    .nonnegative('Payable amount must be a positive number'),
-  isBooked: z
-    .enum(['confirmed', 'unconfirmed', 'canceled'])
-    .default('unconfirmed'),
-});
+      return startTimeInMinutes < endTimeInMinutes;
+    },
+    {
+      message: 'Start time must be before end time',
+      path: ['endTime'],
+    },
+  );
+
+export const BookingValidation = {
+  bookingValidationSchema,
+};

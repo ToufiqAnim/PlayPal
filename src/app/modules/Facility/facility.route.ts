@@ -9,7 +9,7 @@ router.post(
   '/',
 
   auth('admin'),
-  FacilityControllers.AddFacility,
+  FacilityControllers.CreateFacility,
 );
 router.put(
   '/:id',

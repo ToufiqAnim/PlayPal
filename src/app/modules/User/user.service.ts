@@ -54,6 +54,14 @@ export const getProfileService = async (userId: string) => {
   user.password = ''; // Remove password before returning user data
   return user;
 };
+export const GetUsers = async () => {
+  const user = await User.find({});
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return user;
+};
 
 // Service for updating user profile
 export const updateProfileService = async (

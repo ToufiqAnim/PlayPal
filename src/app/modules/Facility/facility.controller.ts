@@ -42,13 +42,7 @@ const UpdateFacility = catchAsync(async (req: Request, res: Response) => {
 const DeleteFacility = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const deletedFacility = await FacilityServices.DeleteFacility(id);
-  if (!deletedFacility) {
-    return res.status(404).json({
-      success: false,
-      statusCode: 404,
-      message: 'Facility not found',
-    });
-  }
+
   sendResponse(res, {
     success: true,
     statusCode: 200,

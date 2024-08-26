@@ -4,6 +4,7 @@ import {
   loginService,
   getProfileService,
   updateProfileService,
+  GetUsers,
 } from './user.service';
 import { z } from 'zod';
 import catchAsync from '../../utils/catchAsync';
@@ -46,7 +47,15 @@ export const login = catchAsync(async (req, res) => {
     data: user,
   });
 });
-
+export const GetAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const facilities = await GetUsers();
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Users retrieved successfully',
+    data: facilities,
+  });
+});
 // Get Profile Controller
 export const getProfile = async (req: Request, res: Response) => {
   try {
