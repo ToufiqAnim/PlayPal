@@ -5,6 +5,7 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 
+// Create Facility
 const CreateFacility = catchAsync(async (req: Request, res: Response) => {
   const facilityData = req.body;
   const newFacility = await FacilityServices.CreateFacility(facilityData);
@@ -16,6 +17,8 @@ const CreateFacility = catchAsync(async (req: Request, res: Response) => {
     data: newFacility,
   });
 });
+
+// Get All Facility
 const GetAllFacilities = catchAsync(async (req: Request, res: Response) => {
   const facilities = await FacilityServices.GetAllFacilities();
   sendResponse(res, {
@@ -25,6 +28,8 @@ const GetAllFacilities = catchAsync(async (req: Request, res: Response) => {
     data: facilities,
   });
 });
+
+// Update Facility
 const UpdateFacility = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const facilityData = req.body;
@@ -39,6 +44,8 @@ const UpdateFacility = catchAsync(async (req: Request, res: Response) => {
     data: updatedFacility,
   });
 });
+
+// Delete Facility
 const DeleteFacility = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const deletedFacility = await FacilityServices.DeleteFacility(id);

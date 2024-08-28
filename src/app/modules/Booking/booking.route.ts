@@ -9,7 +9,7 @@ const router = express.Router();
 router.post(
   '/bookings',
   auth('user'),
-  validateRequest(BookingValidation.bookingValidationSchema),
+  validateRequest(BookingValidation.BookingValidationSchema),
   BookingControllers.CreateBooking,
 );
 router.get('/bookings', auth('admin'), BookingControllers.GetAllBookings);

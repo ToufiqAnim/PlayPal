@@ -3,6 +3,7 @@ import AppError from '../../errors/AppError';
 import { IFacility } from './facility.interface';
 import Facility from './facility.model';
 
+//Create Facility
 const CreateFacility = async (facilityData: IFacility) => {
   const existingFacility = await Facility.isFacilityExists(facilityData.name);
   if (existingFacility) {
@@ -14,6 +15,8 @@ const CreateFacility = async (facilityData: IFacility) => {
   const newFacilty = await Facility.create(facilityData);
   return newFacilty;
 };
+
+//Get All Facility
 const GetAllFacilities = async () => {
   const result = await Facility.find({});
   if (!result.length) {
@@ -21,6 +24,8 @@ const GetAllFacilities = async () => {
   }
   return result;
 };
+
+// Update Facility
 const UpdateFacility = async (id: string, updateData: Partial<IFacility>) => {
   if (updateData.isDeleted) {
     throw new AppError(
@@ -33,6 +38,8 @@ const UpdateFacility = async (id: string, updateData: Partial<IFacility>) => {
   });
   return result;
 };
+
+// Delete Facility
 const DeleteFacility = async (id: string) => {
   const result = await Facility.findByIdAndUpdate(
     id,

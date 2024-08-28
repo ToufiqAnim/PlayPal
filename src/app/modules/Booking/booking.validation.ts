@@ -7,7 +7,7 @@ const objectIdValidationSchema = z
     message: 'Invalid ObjectId',
   });
 
-export const bookingValidationSchema = z
+export const BookingValidationSchema = z
   .object({
     facility: objectIdValidationSchema,
     date: z
@@ -40,5 +40,5 @@ export const bookingValidationSchema = z
   );
 
 export const BookingValidation = {
-  bookingValidationSchema,
+  BookingValidationSchema,
 };

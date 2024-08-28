@@ -2,6 +2,8 @@ import { Types } from 'mongoose';
 /* eslint-disable no-unused-vars */
 import { Model } from 'mongoose';
 export type IUserRole = 'admin' | 'user';
+
+// User Interface
 export interface IUser {
   _id: Types.ObjectId;
   name: string;

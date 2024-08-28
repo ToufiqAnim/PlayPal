@@ -5,7 +5,7 @@ import httpStatus from 'http-status';
 import { createToken } from '../../utils/createTOken';
 import config from '../../config';
 
-// Service for signing up a user
+// SignUp Service
 const SignUp = async (userData: IUser) => {
   const existingUser = await User.isUserExists(userData.email);
   if (existingUser) {
@@ -16,7 +16,7 @@ const SignUp = async (userData: IUser) => {
   return result;
 };
 
-// Service for logging in a user
+// Login Service
 const Login = async (payload: ILoginUser) => {
   const user = await User.isUserExists(payload.email);
 
