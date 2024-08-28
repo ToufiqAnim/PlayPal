@@ -4,7 +4,7 @@ The Sports Facility Booking Platform allows users to book sports facilities with
 
 ---
 
- ### [Live Server]([https://sports-booking-platform.vercel.app](https://playpal-omega.vercel.app/))
+ ### ([Live Server](https://playpal-omega.vercel.app/))
 ```console
 https://sports-booking-platform.vercel.app
 ```
