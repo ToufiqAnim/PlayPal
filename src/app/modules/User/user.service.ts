@@ -6,7 +6,7 @@ import { createToken } from '../../utils/createTOken';
 import config from '../../config';
 
 // Service for signing up a user
-export const signUpService = async (userData: IUser) => {
+const SignUp = async (userData: IUser) => {
   const existingUser = await User.isUserExists(userData.email);
   if (existingUser) {
     throw new AppError(httpStatus.BAD_REQUEST, 'User already exists!!!');
@@ -17,7 +17,7 @@ export const signUpService = async (userData: IUser) => {
 };
 
 // Service for logging in a user
-export const loginService = async (payload: ILoginUser) => {
+const Login = async (payload: ILoginUser) => {
   const user = await User.isUserExists(payload.email);
 
   if (!user) {
@@ -43,39 +43,7 @@ export const loginService = async (payload: ILoginUser) => {
     user,
   };
 };
-
-// Service for getting user profile
-export const getProfileService = async (userId: string) => {
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  user.password = ''; // Remove password before returning user data
-  return user;
-};
-export const GetUsers = async () => {
-  const user = await User.find({});
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  return user;
-};
-
-// Service for updating user profile
-export const updateProfileService = async (
-  userId: string,
-  updateData: Partial<IUser>,
-) => {
-  const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-    new: true,
-  });
-
-  if (!updatedUser) {
-    throw new Error('User not found');
-  }
-
-  updatedUser.password = ''; // Remove password before returning user data
-  return updatedUser;
+export const UserService = {
+  SignUp,
+  Login,
 };
