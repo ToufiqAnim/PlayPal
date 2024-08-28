@@ -41,7 +41,7 @@ const auth = (...requiredRoles: IUserRole[]) => {
 
       req.user = decoded;
       next();
-    } catch (error) {
+    } catch (error: any) {
       console.error('JWT Verification Error:', error.message); // Log the error for debugging
       throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token');
     }

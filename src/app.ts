@@ -28,7 +28,7 @@ app.use('/api', BookingRoutes);
 app.use('/api/user', UserRoutes);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hi Next Level Developer !');
+  res.send('Welcome To Sports Facility Backend !');
 });
 
 app.use(errorHandler);
