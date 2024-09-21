@@ -28,6 +28,16 @@ const GetAllFacilities = catchAsync(async (req: Request, res: Response) => {
     data: facilities,
   });
 });
+const GetSingleFacilities = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const facility = await FacilityServices.GetSingleFacility(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Facility retrieved successfully',
+    data: facility,
+  });
+});
 
 // Update Facility
 const UpdateFacility = catchAsync(async (req: Request, res: Response) => {
@@ -63,4 +73,5 @@ export const FacilityControllers = {
   GetAllFacilities,
   UpdateFacility,
   DeleteFacility,
+  GetSingleFacilities,
 };

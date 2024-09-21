@@ -2,6 +2,7 @@ import { Model } from 'mongoose';
 /* eslint-disable no-unused-vars */
 export interface IFacility {
   name: string;
+  image: string;
   description: string;
   pricePerHour: number;
   location: string;

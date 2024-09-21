@@ -8,6 +8,9 @@ const FacilitySchema = new Schema<IFacility>(
       required: [true, 'Name is required.'],
       trim: true,
     },
+    image: {
+      type: String,
+    },
     description: {
       type: String,
       required: [true, 'Description is required.'],

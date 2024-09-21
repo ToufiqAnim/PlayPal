@@ -24,7 +24,13 @@ const GetAllFacilities = async () => {
   }
   return result;
 };
-
+const GetSingleFacility = async (id: string) => {
+  const facility = await Facility.findById(id);
+  if (!facility) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Facility not found');
+  }
+  return facility;
+};
 // Update Facility
 const UpdateFacility = async (id: string, updateData: Partial<IFacility>) => {
   if (updateData.isDeleted) {
@@ -57,4 +63,5 @@ export const FacilityServices = {
   UpdateFacility,
   DeleteFacility,
   GetAllFacilities,
+  GetSingleFacility,
 };

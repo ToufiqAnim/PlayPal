@@ -28,5 +28,6 @@ router.delete(
   FacilityControllers.DeleteFacility,
 );
 router.get('/', FacilityControllers.GetAllFacilities);
+router.get('/:id', FacilityControllers.GetSingleFacilities);
 
 export const FacilityRoutes = router;
