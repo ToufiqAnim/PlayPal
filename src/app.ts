@@ -20,7 +20,13 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors());
+const allowedOrigins = ['https://sports-facility-booking-frontend.vercel.app'];
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true, // Allow credentials to be sent
+  }),
+);
 
 app.use('/api/auth', AuthRoutes);
 app.use('/api/facility', FacilityRoutes);
