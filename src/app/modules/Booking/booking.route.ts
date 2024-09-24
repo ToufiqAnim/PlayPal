@@ -12,6 +12,12 @@ router.post(
   validateRequest(BookingValidation.BookingValidationSchema),
   BookingControllers.CreateBooking,
 );
+router.post(
+  '/bookings',
+  auth('user'),
+  validateRequest(BookingValidation.BookingValidationSchema),
+  BookingControllers.CreateBooking,
+);
 router.get('/bookings', auth('admin'), BookingControllers.GetAllBookings);
 router.get('/bookings/user', auth('user'), BookingControllers.GetUserBookings);
 router.delete('/bookings/:id', auth('user'), BookingControllers.CancelBooking);
